@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CJR Electronics - Local Preview & Testing</title>
+  <!-- Google Fonts: Inter and Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons for E-commerce -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* CSS Variables matching the CloudNet screenshot (Liquid Glassmorphism) */
+    :root {
+      --bg-gradient: linear-gradient(135deg, #070a13 0%, #0d1527 100%);
+      --glass-bg: rgba(15, 23, 42, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-hover-border: rgba(56, 189, 248, 0.3);
+      --text-primary: #ffffff;
+      --text-secondary: #94a3b8;
+      --primary-accent: #1e70e0;
+      --primary-accent-glow: rgba(30, 112, 224, 0.4);
+      --success-green: #10b981;
+      --success-green-glow: rgba(16, 185, 129, 0.4);
+      --whatsapp-green: #25d366;
+      --youtube-red: #ff0000;
+      --font-display: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    /* Light Mode Variables Override */
+    body.light-mode {
+      --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+      --glass-bg: rgba(255, 255, 255, 0.65);
+      --glass-border: rgba(15, 23, 42, 0.08);
+      --glass-hover-border: rgba(30, 112, 224, 0.4);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --shadow-glass: 0 8px 32px 0 rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Background decorative liquid blobs */
+    .bg-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: -1;
+      opacity: 0.15;
+      transition: opacity 0.3s ease;
+    }
+    body.light-mode .bg-blob {
+      opacity: 0.06;
+    }
+    .blob-blue {
+      top: 10%;
+      right: 15%;
+      width: 400px;
+      height: 400px;
+      background: var(--primary-accent);
+    }
+    .blob-purple {
+      bottom: 20%;
+      left: 10%;
+      width: 500px;
+      height: 500px;
+      background: #8b5cf6;
+    }
+
+    /* Container for spacing */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Top bar above header */
+    .topbar {
+      background: rgba(15, 23, 42, 0.4);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 8px 0;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      transition: background 0.3s ease;
+    }
+    body.light-mode .topbar {
+      background: rgba(226, 232, 240, 0.5);
+    }
+    .topbar-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .topbar-left a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.3s ease;
+    }
+    .topbar-left a:hover {
+      color: var(--text-primary);
+    }
+    .topbar-divider {
+      color: var(--glass-border);
+    }
+    .topbar-right {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    /* Floating Glass Header */
+    header {
+      position: sticky;
+      top: 20px;
+      z-index: 100;
+      margin-bottom: 40px;
+    }
+
+    .header-glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      padding: 12px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-glass);
+      transition: all 0.3s ease;
+    }
+
+    .header-logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    /* Silver coin blue robot logo matching screenshot */
+    .robot-logo-coin {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #f8fafc;
+      border: 3px solid #cbd5e1;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25), inset 0 2px 4px rgba(255,255,255,1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .robot-logo-svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .brand-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.4rem;
+      background: linear-gradient(to right, var(--text-primary), #93c5fd);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.5px;
+    }
+
+    /* Center Search Bar with Ultra Glass iOS 26 Visual Styling */
+    .search-box {
+      flex: 0 1 350px;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 12px 20px 12px 50px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    body.light-mode .search-box input {
+      background: rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.8), 0 4px 15px rgba(15, 23, 42, 0.05);
+    }
+    .search-box input:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(56, 189, 248, 0.5);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 0 25px rgba(56, 189, 248, 0.25), 0 8px 30px rgba(0,0,0,0.3);
+    }
+    body.light-mode .search-box input:focus {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(30, 112, 224, 0.4);
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.8), 0 0 25px rgba(30, 112, 224, 0.15), 0 8px 30px rgba(15, 23, 42, 0.08);
+    }
+    .search-box i {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+    }
+
+    /* Actions: Cart & Theme Toggles */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle-btn, .cart-trigger {
+      position: relative;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    body.light-mode .theme-toggle-btn, body.light-mode .cart-trigger {
+      background: rgba(15, 23, 42, 0.04);
+    }
+    .theme-toggle-btn:hover, .cart-trigger:hover {
+      background: var(--primary-accent);
+      border-color: var(--primary-accent);
+      color: white;
+      box-shadow: 0 0 15px var(--primary-accent-glow);
+      transform: scale(1.05);
+    }
+    .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--success-green);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 50%;
+      min-width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
+    /* Category Navigation Bar */
+    .categories-nav {
+      margin-bottom: 30px;
+    }
+    .categories-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+    .categories-scroll::-webkit-scrollbar {
+      height: 4px;
+    }
+    .categories-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+    }
+    .cat-btn {
+      white-space: nowrap;
+      padding: 10px 22px;
+      border-radius: 30px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      font-family: var(--font-display);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Liquid Rising up active button pop animation */
+    .cat-btn.active, .cat-btn:hover {
+      background: linear-gradient(135deg, var(--primary-accent) 0%, #2563eb 100%);
+      color: #fff;
+      border-color: rgba(255,255,255,0.15);
+      box-shadow: 0 8px 20px var(--primary-accent-glow), inset 0 1px 1px rgba(255,255,255,0.3);
+      transform: translateY(-5px) scale(1.03);
+    }
+    /* Gloss shine animation for active buttons */
+    .cat-btn.active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -50%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-25deg);
+      animation: gloss-shine 4s infinite linear;
+    }
+    @keyframes gloss-shine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    /* Hero Section */
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(30, 112, 224, 0.1), rgba(139, 92, 246, 0.05));
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+    .hero-content h1 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 2.2rem;
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+    .hero-content h1 span {
+  background: linear-gradient(to right, #60a5fa, #34d399);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+    .hero-content p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      max-width: 500px;
+      margin-bottom: 25px;
+    }
+    .hero-btn {
+      background: var(--primary-accent);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-family: var(--font-display);
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 15px var(--primary-accent-glow);
+      transition: all 0.3s ease;
+    }
+    .hero-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--primary-accent-glow);
+    }
+    .hero-logo-large {
+      opacity: 0.85;
+      animation: floatLogo 6s ease-in-out infinite;
+    }
+
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    /* Product Section */
+    .section-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::after {
+      content: '';
+      flex-grow: 1;
+      height: 1px;
+      background: var(--glass-border);
+    }
+
+    /* Products Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 25px;
+      margin-bottom: 60px;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    /* Premium Product Card - Glassmorphism */
+    .product-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--glass-hover-border);
+      box-shadow: 0 12px 30px rgba(30, 112, 224, 0.15), 0 0 15px rgba(255,255,255,0.02);
+    }
+
+    /* Image Wrapper with cool Zoom */
+    .product-image-wrapper {
+      width: 100%;
+      height: 200px;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .product-card:hover .product-image {
+      transform: scale(1.08);
+    }
+
+    .product-category-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #38bdf8;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .product-info {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-description {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin-bottom: 15px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      height: 40px;
+    }
+
+    .product-price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 15px;
+    }
+
+    .product-price {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: #10b981;
+    }
+    body.light-mode .product-price {
+      color: #059669;
+    }
+
+    .product-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* Buttons with gradients */
+    .btn-pill {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 10px 5px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .btn-cart {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      border: 1px solid var(--glass-border);
+    }
+    body.light-mode .btn-cart {
+      background: rgba(15, 23, 42, 0.05);
+      border-color: rgba(15, 23, 42, 0.1);
+    }
+    .btn-cart:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    body.light-mode .btn-cart:hover {
+      background: rgba(15, 23, 42, 0.08);
+    }
+
+    .btn-buy {
+      background: linear-gradient(135deg, var(--primary-accent) 0%, #2563eb 100%);
+      color: white;
+      box-shadow: 0 4px 10px var(--primary-accent-glow);
+    }
+    .btn-buy:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 15px var(--primary-accent-glow);
+    }
+
+    /* Floating Shopping Cart Drawer Slide-out from Right */
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 100%;
+      max-width: 400px;
+      height: 100vh;
+      background: rgba(8, 12, 22, 0.95);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border-left: 1px solid var(--glass-border);
+      z-index: 1000;
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+      transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    body.light-mode .cart-drawer {
+      background: rgba(248, 250, 252, 0.97);
+      box-shadow: -10px 0 30px rgba(15, 23, 42, 0.15);
+    }
+    .cart-drawer.open {
+      right: 0;
+    }
+
+    .cart-drawer-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-drawer-header h2 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .close-cart {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .close-cart:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+    }
+    body.light-mode .close-cart:hover {
+      background: rgba(15, 23, 42, 0.05);
+      color: var(--text-primary);
+    }
+
+    .cart-items-list {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 10px;
+    }
+    body.light-mode .cart-item {
+      background: rgba(15, 23, 42, 0.02);
+    }
+    .cart-item-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .cart-item-info {
+      flex-grow: 1;
+    }
+    .cart-item-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+    .cart-item-price {
+      color: #10b981;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    body.light-mode .cart-item-price {
+      color: #059669;
+    }
+    .cart-item-qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .qty-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+    body.light-mode .qty-btn {
+      background: rgba(15, 23, 42, 0.05);
+    }
+    .qty-btn:hover {
+      background: var(--primary-accent);
+      border-color: var(--primary-accent);
+      color: white;
+    }
+    .qty-val {
+      font-size: 0.9rem;
+      font-weight: 600;
+      min-width: 15px;
+      text-align: center;
+    }
+    .remove-item {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 5px;
+      transition: all 0.3s ease;
+    }
+    .remove-item:hover {
+      transform: scale(1.1);
+    }
+
+    .cart-empty {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+    .cart-empty i {
+      font-size: 3rem;
+      opacity: 0.3;
+    }
+
+    /* Checkout Details Form inside cart */
+    .checkout-form-section {
+      padding: 20px 24px;
+      border-top: 1px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.1);
+    }
+    body.light-mode .checkout-form-section {
+      background: rgba(15, 23, 42, 0.02);
+    }
+    .form-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      outline: none;
+    }
+    body.light-mode .form-group input, body.light-mode .form-group textarea {
+      background: rgba(15, 23, 42, 0.03);
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: var(--primary-accent);
+    }
+
+    .cart-footer {
+      padding: 24px;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .cart-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .cart-total-val {
+      color: #10b981;
+      font-size: 1.3rem;
+    }
+    body.light-mode .cart-total-val {
+      color: #059669;
+    }
+
+    .cart-checkout-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-checkout-wa {
+      background: var(--whatsapp-green);
+      color: white;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 12px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+      transition: all 0.3s ease;
+    }
+    .btn-checkout-wa:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    }
+
+    .btn-checkout-pp {
+      background: linear-gradient(135deg, #ffc439 0%, #ffb300 100%);
+      color: #003087;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 12px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(255, 196, 57, 0.3);
+      transition: all 0.3s ease;
+    }
+    .btn-checkout-pp:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(255, 196, 57, 0.4);
+    }
+
+    /* Floating action buttons at bottom-right */
+    .floating-actions {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 99;
+    }
+
+    .btn-floating {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      cursor: pointer;
+      color: white;
+      border: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .btn-floating:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .float-wa {
+      background: var(--whatsapp-green);
+      animation: waPulse 2s infinite;
+    }
+
+    .float-yt {
+      background: var(--youtube-red);
+      box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+    }
+    .float-yt:hover {
+      box-shadow: 0 6px 20px rgba(255, 0, 0, 0.5);
+    }
+
+    @keyframes waPulse {
+      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+      70% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
+
+    /* Footer styled professionally */
+    footer {
+      border-top: 1px solid var(--glass-border);
+      background: rgba(5, 7, 13, 0.8);
+      padding: 30px 20px;
+      margin-top: 80px;
+      text-align: center;
+      transition: background 0.3s ease;
+    }
+    body.light-mode footer {
+      background: rgba(226, 232, 240, 0.8);
+    }
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .footer-copyright {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 15px;
+      width: 100%;
+    }
+    body.light-mode .footer-copyright {
+      border-top-color: rgba(15,23,42,0.06);
+    }
+    .footer-copyright span {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* Overlay for Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(5px);
+      z-index: 999;
+      display: none;
+    }
+    .drawer-overlay.active {
+      display: block;
+    }
+
+    /* Notifications popup */
+    .toast-notification {
+      position: fixed;
+      bottom: 100px;
+      left: 30px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--success-green);
+      color: var(--text-primary);
+      padding: 12px 24px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow-glass);
+      transform: translateY(150px);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 9999;
+    }
+    .toast-notification.show {
+      transform: translateY(0);
+    }
+    .toast-notification i {
+      color: var(--success-green);
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Top bar above header -->
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="topbar-left">
+        <a href="#" id="topbar-loc-link" target="_blank"><i class="fa-solid fa-location-dot"></i> Store Location</a>
+        <span class="topbar-divider">|</span>
+        <a href="#" id="topbar-help-link" target="_blank"><i class="fa-solid fa-circle-question"></i> Help Us</a>
+      </div>
+      <div class="topbar-right" id="topbar-brand-name">
+        CJR Electronics Private Limited
+      </div>
+    </div>
+  </div>
+
+  <!-- Background decorative blobs -->
+  <div class="bg-blob blob-blue"></div>
+  <div class="bg-blob blob-purple"></div>
+
+  <div class="container" style="position: relative; z-index: 1;">
+    
+    <!-- Floating Header -->
+    <header>
+      <div class="header-glass">
+        <div class="header-logo-container">
+          <!-- Custom Robot Silver Coin Logo -->
+          <div class="robot-logo-coin">
+            <svg class="robot-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="53" r="26" fill="#1e70e0" />
+              <rect x="18" y="43" width="10" height="20" rx="4" fill="#1e70e0" />
+              <rect x="72" y="43" width="10" height="20" rx="4" fill="#1e70e0" />
+              <line x1="32" y1="36" x2="28" y2="22" stroke="#1e70e0" stroke-width="4" stroke-linecap="round" />
+              <circle cx="28" cy="20" r="4.5" fill="#1e70e0" />
+              <line x1="68" y1="36" x2="72" y2="22" stroke="#1e70e0" stroke-width="4" stroke-linecap="round" />
+              <circle cx="72" cy="20" r="4.5" fill="#1e70e0" />
+              <circle cx="41" cy="50" r="3.5" fill="#ffffff" />
+              <circle cx="59" cy="50" r="3.5" fill="#ffffff" />
+              <line x1="38" y1="62" x2="62" y2="58" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
+              <path d="M35 78 C 35 72, 65 72, 65 78 Z" fill="#1e70e0" />
+              <circle cx="38" cy="76" r="2" fill="#ffffff" />
+              <line x1="52" y1="75" x2="60" y2="75" stroke="#ffffff" stroke-width="1.5" />
+              <line x1="52" y1="77" x2="58" y2="77" stroke="#ffffff" stroke-width="1.5" />
+            </svg>
+          </div>
+          <span class="brand-name">CJR Electronics</span>
+        </div>
+
+        <!-- Center Search Bar -->
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="store-search" placeholder="Search electronic items..." onkeyup="searchProducts()">
+        </div>
+
+        <div class="header-actions">
+          <!-- Dark / Light Theme Toggle Button -->
+          <div class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Light/Dark Mode">
+            <i class="fa-solid fa-sun" id="theme-icon"></i>
+          </div>
+          <!-- Cart Button -->
+          <div class="cart-trigger" onclick="toggleCart(true)">
+            <i class="fa-solid fa-shopping-cart"></i>
+            <span class="cart-badge" id="cart-count">0</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Categories Navigation Bar -->
+    <nav class="categories-nav">
+      <div class="categories-scroll" id="categories-container">
+        <button class="cat-btn active" onclick="filterCategory('all')">Student Home Page</button>
+        <button class="cat-btn" onclick="filterCategory('Student Items')">Student Items</button>
+        <button class="cat-btn" onclick="filterCategory('Amplifier Boards')">Amplifier Boards</button>
+        <button class="cat-btn" onclick="filterCategory('Arduino Items')">Arduino Items</button>
+        <button class="cat-btn" onclick="filterCategory('Battery Packs')">Battery Packs</button>
+        <button class="cat-btn" onclick="filterCategory('Solar System')">Solar System</button>
+        <button class="cat-btn" onclick="filterCategory('LEDs')">LEDs</button>
+        <button class="cat-btn" onclick="filterCategory('Mobile Accessories')">Mobile Accessories</button>
+        <button class="cat-btn" onclick="filterCategory('Tools')">Tools</button>
+      </div>
+    </nav>
+
+    <!-- Promotional Hero section -->
+    <div class="hero-banner">
+      <div class="hero-content">
+        <h1>Premium Electronics, <br><span>Right to Your Doorstep.</span></h1>
+        <p>Explore high-quality Arduino modules, Amplifier boards, custom battery packs, and student project components at best rates in Sri Lanka.</p>
+        <button class="hero-btn" onclick="document.getElementById('products-section').scrollIntoView({behavior: 'smooth'})">Shop Products Now</button>
+      </div>
+      <div class="hero-logo-large">
+        <div class="robot-logo-coin" style="width: 140px; height: 140px; border-width: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.4);">
+          <svg style="width: 100px; height: 100px;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="53" r="26" fill="#1e70e0" />
+            <rect x="18" y="43" width="10" height="20" rx="4" fill="#1e70e0" />
+            <rect x="72" y="43" width="10" height="20" rx="4" fill="#1e70e0" />
+            <line x1="32" y1="36" x2="28" y2="22" stroke="#1e70e0" stroke-width="4" stroke-linecap="round" />
+            <circle cx="28" cy="20" r="4.5" fill="#1e70e0" />
+            <line x1="68" y1="36" x2="72" y2="22" stroke="#1e70e0" stroke-width="4" stroke-linecap="round" />
+            <circle cx="72" cy="20" r="4.5" fill="#1e70e0" />
+            <circle cx="41" cy="50" r="3.5" fill="#ffffff" />
+            <circle cx="59" cy="50" r="3.5" fill="#ffffff" />
+            <line x1="38" y1="62" x2="62" y2="58" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M35 78 C 35 72, 65 72, 65 78 Z" fill="#1e70e0" />
+            <circle cx="38" cy="76" r="2" fill="#ffffff" />
+            <line x1="52" y1="75" x2="60" y2="75" stroke="#ffffff" stroke-width="1.5" />
+            <line x1="52" y1="77" x2="58" y2="77" stroke="#ffffff" stroke-width="1.5" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products Grid Section -->
+    <section id="products-section">
+      <h2 class="section-title" id="grid-title"><i class="fa-solid fa-microchip" style="color: #60a5fa;"></i> All Products</h2>
+      
+      <div class="products-grid" id="products-container">
+        <!-- Products generated by JS -->
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Shopping Cart Drawer Drawer -->
+  <div class="drawer-overlay" id="cart-overlay" onclick="toggleCart(false)"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h2><i class="fa-solid fa-shopping-basket" style="color: #34d399;"></i> Shopping Cart</h2>
+      <button class="close-cart" onclick="toggleCart(false)"><i class="fa-solid fa-times"></i></button>
+    </div>
+
+    <!-- Cart items scroll block -->
+    <div class="cart-items-list" id="cart-items-list">
+      <!-- Generated by JS -->
+    </div>
+
+    <!-- Delivery/Shipping Form -->
+    <div class="checkout-form-section" id="checkout-form-container" style="display: none;">
+      <h3 class="form-title">Delivery Details (for COD/WhatsApp Orders)</h3>
+      <div class="form-group">
+        <input type="text" id="customer-name" placeholder="Full Name / ඔබගේ නම" required>
+      </div>
+      <div class="form-group">
+        <input type="tel" id="customer-phone" placeholder="Phone Number / දුරකථන අංකය" required>
+      </div>
+      <div class="form-group">
+        <textarea id="customer-address" rows="2" placeholder="Shipping Address / බෙදාහැරීමේ ලිපිනය" required></textarea>
+      </div>
+    </div>
+
+    <!-- Cart Footer with Totals -->
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span>Subtotal:</span>
+        <span class="cart-total-val" id="cart-total">LKR 0</span>
+      </div>
+      <div class="cart-checkout-actions">
+        <button class="btn-checkout-wa" id="wa-checkout-btn" onclick="checkoutWhatsApp()">
+          <i class="fa-brands fa-whatsapp"></i> Order via WhatsApp (COD)
+        </button>
+        <button class="btn-checkout-pp" id="pp-checkout-btn" onclick="checkoutPayPal()">
+          <i class="fa-brands fa-paypal"></i> Checkout with PayPal / Card
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Action Buttons at bottom-right (WhatsApp and YouTube) -->
+  <div class="floating-actions">
+    <!-- YouTube Floating Button -->
+    <button class="btn-floating float-yt" id="floating-yt-btn" onclick="openYouTubeChannel()" title="Watch on YouTube">
+      <i class="fa-brands fa-youtube"></i>
+    </button>
+    <!-- WhatsApp Floating Button -->
+    <button class="btn-floating float-wa" id="floating-wa-btn" onclick="openWhatsAppChat()" title="Chat on WhatsApp">
+      <i class="fa-brands fa-whatsapp"></i>
+    </button>
+  </div>
+
+  <!-- Professional Footer -->
+  <footer>
+    <div class="container footer-content">
+      <div class="footer-logo">
+        <div class="robot-logo-coin" style="width: 32px; height: 32px; border-width: 2px;">
+          <svg style="width: 24px; height: 24px;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="53" r="26" fill="#1e70e0" />
+            <rect x="18" y="43" width="10" height="20" rx="4" fill="#1e70e0" />
+            <rect x="72" y="43" width="10" height="20" rx="4" fill="#1e70e0" />
+            <line x1="32" y1="36" x2="28" y2="22" stroke="#1e70e0" stroke-width="4" stroke-linecap="round" />
+            <circle cx="28" cy="20" r="4.5" fill="#1e70e0" />
+            <line x1="68" y1="36" x2="72" y2="22" stroke="#1e70e0" stroke-width="4" stroke-linecap="round" />
+            <circle cx="72" cy="20" r="4.5" fill="#1e70e0" />
+            <circle cx="41" cy="50" r="3.5" fill="#ffffff" />
+            <circle cx="59" cy="50" r="3.5" fill="#ffffff" />
+            <line x1="38" y1="62" x2="62" y2="58" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M35 78 C 35 72, 65 72, 65 78 Z" fill="#1e70e0" />
+            <circle cx="38" cy="76" r="2" fill="#ffffff" />
+            <line x1="52" y1="75" x2="60" y2="75" stroke="#ffffff" stroke-width="1.5" />
+            <line x1="52" y1="77" x2="58" y2="77" stroke="#ffffff" stroke-width="1.5" />
+          </svg>
+        </div>
+        <span class="brand-name" style="font-size: 1.1rem;">CJR Electronics</span>
+      </div>
+      <p class="footer-copyright" id="footer-copyright-text">
+        &copy; Copyright <span>CJR Electronics Private Limited</span> | Designed by <span>Isuru Sithumina</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Toast Notifications -->
+  <div class="toast-notification" id="toast-notif">
+    <i class="fa-solid fa-check-circle"></i>
+    <span id="toast-message">Product added to cart!</span>
+  </div>
+
+  <!-- PayPal form -->
+  <form id="paypal-cart-form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:none;">
+    <input type="hidden" name="cmd" value="_cart">
+    <input type="hidden" name="upload" value="1">
+    <input type="hidden" name="business" id="pp-form-business">
+    <input type="hidden" name="currency_code" id="pp-form-currency" value="USD">
+  </form>
+
+  <!-- JavaScript E-commerce Code -->
+  <script>
+    const STORE_CONFIG = {
+      whatsappNumber: "94771234567", 
+      paypalEmail: "paypal-seller@cjr.com",
+      currency: "LKR",
+      paypalConversionRate: 0.0031,
+      paypalCurrencyCode: "USD",
+      storeLocationUrl: "https://maps.google.com/?q=CJR+Electronics+Private+Limited", 
+      youtubeUrl: "https://youtube.com/@cjr_electronics", // Configurable YouTube link
+      storeName: "CJR Electronics Private Limited",
+      designerName: "Isuru Sithumina"
+    };
+
+    // MOCK PRODUCT DATA
+    const mockBloggerPosts = [
+      {
+        id: "post1",
+        title: "Arduino Uno R3 Core Board CH340",
+        category: "Arduino Items",
+        price: 1850,
+        image: "https://images.unsplash.com/photo-1608564697071-40916a555b0a?w=500&auto=format&fit=crop&q=60",
+        description: "High quality Arduino Uno R3 development board with USB cable. Compatible with Arduino IDE.",
+        paypalLink: "https://www.paypal.com/ncp/payment/MOCK_PAYPAL_UNO"
+      },
+      {
+        id: "post2",
+        title: "TDA7498 2x100W Digital Amplifier Board",
+        category: "Amplifier Boards",
+        price: 2450,
+        image: "https://images.unsplash.com/photo-1558089687-f282ffcbd1d5?w=500&auto=format&fit=crop&q=60",
+        description: "Dual channel Class D digital audio amplifier module. Support 100W + 100W output.",
+        paypalLink: "https://www.paypal.com/ncp/payment/MOCK_PAYPAL_AMP"
+      },
+      {
+        id: "post3",
+        title: "12V 100Ah Lithium Iron Phosphate Battery Pack",
+        category: "Battery Packs",
+        price: 95000,
+        image: "https://images.unsplash.com/photo-1620288627223-53302f4e8c74?w=500&auto=format&fit=crop&q=60",
+        description: "LiFePO4 high capacity deep cycle battery pack with built-in BMS protection.",
+        paypalLink: "https://www.paypal.com/ncp/payment/MOCK_PAYPAL_BATT"
+      },
+      {
+        id: "post4",
+        title: "100W Mono-Crystalline Solar Panel",
+        category: "Solar System",
+        price: 16500,
+        image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=500&auto=format&fit=crop&q=60",
+        description: "High efficiency tempered glass monocrystalline solar panel for domestic solar grid systems.",
+        paypalLink: ""
+      },
+      {
+        id: "post5",
+        title: "5mm Bright LED Assorted Kit (100pcs)",
+        category: "LEDs",
+        price: 450,
+        image: "https://images.unsplash.com/photo-1517055726952-47c020ac89b6?w=500&auto=format&fit=crop&q=60",
+        description: "Mixed color assortment box of 5mm LEDs (Red, Blue, Green, Yellow, White) for projects.",
+        paypalLink: ""
+      },
+      {
+        id: "post6",
+        title: "QC3.0 USB Fast Charging Module",
+        category: "Mobile Accessories",
+        price: 680,
+        image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=500&auto=format&fit=crop&q=60",
+        description: "USB DC-DC Buck converter for mobile charging with QuickCharge 3.0 protocol support.",
+        paypalLink: ""
+      },
+      {
+        id: "post7",
+        title: "USB Soldering Iron Pen 8W 5V",
+        category: "Tools",
+        price: 2150,
+        image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=500&auto=format&fit=crop&q=60",
+        description: "Portable rapid heating electric soldering iron pen. Power by standard USB port.",
+        paypalLink: ""
+      },
+      {
+        id: "post8",
+        title: "Arduino Sensor Kit V2.0",
+        category: "Arduino Items",
+        price: 3950,
+        image: "https://images.unsplash.com/photo-1563770660941-20978e870e26?w=500&auto=format&fit=crop&q=60",
+        description: "Complete starter sensor kit for Arduino containing 16 different modules and connection cables.",
+        paypalLink: ""
+      }
+    ];
+
+    let cart = [];
+    let activeCategory = 'all';
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Load cart
+      const savedCart = localStorage.getItem("cjr_cart");
+      if (savedCart) {
+        cart = JSON.parse(savedCart);
+      }
+      
+      // Load Theme
+      initTheme();
+      
+      // Bind Topbar and Settings links
+      bindTopbarAndSettings();
+      
+      // Initialize E-commerce grid (shuffle on homepage load for the "autoload based on views" feel)
+      const sortedPosts = autoLoadRecommendPosts(mockBloggerPosts);
+      renderProducts(sortedPosts);
+      updateCartUI();
+    });
+
+    // Dynamic Binding of Settings to Links
+    function bindTopbarAndSettings() {
+      const locLink = document.getElementById("topbar-loc-link");
+      if (locLink) locLink.href = STORE_CONFIG.storeLocationUrl;
+      
+      const helpLink = document.getElementById("topbar-help-link");
+      if (helpLink) {
+        const msg = encodeURIComponent("Hello CJR Electronics Support! I need assistance.");
+        helpLink.href = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${msg}`;
+      }
+
+      const brandName = document.getElementById("topbar-brand-name");
+      if (brandName) brandName.textContent = STORE_CONFIG.storeName;
+
+      const copyrightText = document.getElementById("footer-copyright-text");
+      if (copyrightText) {
+        copyrightText.innerHTML = `&copy; Copyright <span>${STORE_CONFIG.storeName}</span> | Designed by <span>${STORE_CONFIG.designerName}</span>`;
+      }
+    }
+
+    // Dynamic "views-based" sorting mockup
+    function autoLoadRecommendPosts(posts) {
+      // Shuffles the posts on load to simulate dynamically updated recommended feed
+      const shuffled = [...posts];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    // Dark/Light Theme Switcher Logic
+    function toggleTheme() {
+      const body = document.body;
+      const icon = document.getElementById("theme-icon");
+      
+      body.classList.toggle("light-mode");
+      const isLight = body.classList.contains("light-mode");
+      localStorage.setItem("cjr_theme", isLight ? "light" : "dark");
+      
+      if (isLight) {
+        icon.className = "fa-solid fa-moon";
+      } else {
+        icon.className = "fa-solid fa-sun";
+      }
+    }
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem("cjr_theme");
+      const body = document.body;
+      const icon = document.getElementById("theme-icon");
+      
+      if (savedTheme === "light") {
+        body.classList.add("light-mode");
+        if (icon) icon.className = "fa-solid fa-moon";
+      } else {
+        body.classList.remove("light-mode");
+        if (icon) icon.className = "fa-solid fa-sun";
+      }
+    }
+
+    // Render Products Grid
+    function renderProducts(products) {
+      const container = document.getElementById("products-container");
+      container.innerHTML = "";
+
+      if (products.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 40px 0;">No items found matching search filters.</div>`;
+        return;
+      }
+
+      products.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.dataset.category = p.category;
+        
+        let buyAction = `onclick="directBuyNow('${p.id}')"`;
+        
+        card.innerHTML = `
+          <div class="product-image-wrapper">
+            <span class="product-category-tag">${p.category}</span>
+            <img class="product-image" src="${p.image}" alt="${p.title}">
+          </div>
+          <div class="product-info">
+            <h3 class="product-title" title="${p.title}">${p.title}</h3>
+            <p class="product-description">${p.description}</p>
+            <div class="product-price-row">
+              <span class="product-price">LKR ${p.price.toLocaleString()}</span>
+            </div>
+            <div class="product-actions">
+              <button class="btn-pill btn-cart" onclick="addToCart('${p.id}')">
+                <i class="fa-solid fa-cart-plus"></i> Add Cart
+              </button>
+              <button class="btn-pill btn-buy" ${buyAction}>
+                <i class="fa-solid fa-bolt"></i> Buy Now
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Toggle Cart Drawer
+    function toggleCart(open) {
+      const drawer = document.getElementById("cart-drawer");
+      const overlay = document.getElementById("cart-overlay");
+      
+      if (open) {
+        drawer.classList.add("open");
+        overlay.classList.add("active");
+      } else {
+        drawer.classList.remove("open");
+        overlay.classList.remove("active");
+      }
+    }
+
+    // Add Item to Cart
+    function addToCart(productId) {
+      const p = mockBloggerPosts.find(item => item.id === productId);
+      if (!p) return;
+
+      const existingItem = cart.find(item => item.id === productId);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          id: p.id,
+          title: p.title,
+          price: p.price,
+          image: p.image,
+          paypalLink: p.paypalLink,
+          quantity: 1
+        });
+      }
+
+      saveCart();
+      updateCartUI();
+      showToast(`Added: ${p.title}`);
+    }
+
+    // Save cart
+    function saveCart() {
+      localStorage.setItem("cjr_cart", JSON.stringify(cart));
+    }
+
+    // Update Cart drawer UI
+    function updateCartUI() {
+      const countEl = document.getElementById("cart-count");
+      const listEl = document.getElementById("cart-items-list");
+      const totalEl = document.getElementById("cart-total");
+      const formEl = document.getElementById("checkout-form-container");
+      
+      const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      countEl.textContent = totalCount;
+
+      listEl.innerHTML = "";
+      
+      if (cart.length === 0) {
+        listEl.innerHTML = `
+          <div class="cart-empty">
+            <i class="fa-solid fa-shopping-basket"></i>
+            <p>Your shopping cart is empty</p>
+          </div>
+        `;
+        totalEl.textContent = "LKR 0";
+        formEl.style.display = "none";
+        return;
+      }
+
+      formEl.style.display = "block";
+
+      let subtotal = 0;
+
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+
+        const el = document.createElement("div");
+        el.className = "cart-item";
+        el.innerHTML = `
+          <img class="cart-item-img" src="${item.image}" alt="${item.title}">
+          <div class="cart-item-info">
+            <div class="cart-item-title">${item.title}</div>
+            <div class="cart-item-price">LKR ${item.price.toLocaleString()}</div>
+            <div class="cart-item-qty-controls">
+              <button class="qty-btn" onclick="updateQty('${item.id}', -1)"><i class="fa-solid fa-minus"></i></button>
+              <span class="qty-val">${item.quantity}</span>
+              <button class="qty-btn" onclick="updateQty('${item.id}', 1)"><i class="fa-solid fa-plus"></i></button>
+              <button class="remove-item" onclick="removeItem('${item.id}')" style="margin-left: 10px;">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+        `;
+        listEl.appendChild(el);
+      });
+
+      totalEl.textContent = "LKR " + subtotal.toLocaleString();
+    }
+
+    // Update Quantity
+    function updateQty(productId, delta) {
+      const item = cart.find(item => item.id === productId);
+      if (!item) return;
+
+      item.quantity += delta;
+      if (item.quantity <= 0) {
+        removeItem(productId);
+      } else {
+        saveCart();
+        updateCartUI();
+      }
+    }
+
+    // Remove item
+    function removeItem(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      saveCart();
+      updateCartUI();
+    }
+
+    // Search
+    function searchProducts() {
+      const query = document.getElementById("store-search").value.toLowerCase();
+      
+      const filtered = mockBloggerPosts.filter(p => {
+        const matchesQuery = p.title.toLowerCase().includes(query) || p.description.toLowerCase().includes(query);
+        const matchesCategory = (activeCategory === 'all') || (p.category === activeCategory);
+        return matchesQuery && matchesCategory;
+      });
+      
+      renderProducts(filtered);
+    }
+
+    // Category Filter with smooth fade transition
+    function filterCategory(categoryName) {
+      activeCategory = categoryName;
+      
+      const btns = document.querySelectorAll(".cat-btn");
+      btns.forEach(btn => {
+        if (btn.textContent.trim() === "Student Home Page" && categoryName === 'all') {
+          btn.classList.add("active");
+        } else if (btn.textContent.trim() === categoryName) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+
+      const titleEl = document.getElementById("grid-title");
+      if (categoryName === 'all') {
+        titleEl.innerHTML = `<i class="fa-solid fa-microchip" style="color: #60a5fa;"></i> All Products`;
+      } else {
+        titleEl.innerHTML = `<i class="fa-solid fa-tag" style="color: #60a5fa;"></i> ${categoryName}`;
+      }
+
+      // Smooth Fade-out/Fade-in transition for e-commerce autoload feed
+      const container = document.getElementById("products-container");
+      container.style.opacity = "0";
+      
+      setTimeout(() => {
+        const filtered = categoryName === 'all' 
+          ? mockBloggerPosts 
+          : mockBloggerPosts.filter(p => p.category === categoryName);
+        
+        // Dynamic Views reshuffling on category load
+        const recommendList = autoLoadRecommendPosts(filtered);
+        renderProducts(recommendList);
+        container.style.opacity = "1";
+      }, 250);
+    }
+
+    // Direct Buy Now
+    function directBuyNow(productId) {
+      const p = mockBloggerPosts.find(item => item.id === productId);
+      if (!p) return;
+
+      if (p.paypalLink && p.paypalLink.trim().length > 0) {
+        showToast("Redirecting to PayPal Checkout...");
+        setTimeout(() => {
+          window.open(p.paypalLink, '_blank');
+        }, 1000);
+      } else {
+        const msg = encodeURIComponent(
+          `*New Order from CJR Electronics*\n` +
+          `-------------------------------\n` +
+          `I want to buy this item immediately:\n\n` +
+          `- 1 x *${p.title}* (LKR ${p.price.toLocaleString()})\n\n` +
+          `Please reply with banking/COD dispatch details.`
+        );
+        window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${msg}`, '_blank');
+      }
+    }
+
+    // WhatsApp Checkout
+    function checkoutWhatsApp() {
+      const name = document.getElementById("customer-name").value.trim();
+      const phone = document.getElementById("customer-phone").value.trim();
+      const address = document.getElementById("customer-address").value.trim();
+
+      if (!name || !phone || !address) {
+        alert("Please fill in your Delivery Details (Name, Phone, Address) before placing order!");
+        return;
+      }
+
+      let orderText = `*New Order - ${STORE_CONFIG.storeName}*\n`;
+      orderText += `==========================================\n`;
+      orderText += `*Customer Details:*\n`;
+      orderText += `- *Name:* ${name}\n`;
+      orderText += `- *Phone:* ${phone}\n`;
+      orderText += `- *Address:* ${address}\n\n`;
+      orderText += `*Ordered Items:*\n`;
+
+      let total = 0;
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        orderText += `- ${item.quantity} x *${item.title}* (LKR ${item.price.toLocaleString()} each) = LKR ${itemTotal.toLocaleString()}\n`;
+      });
+
+      orderText += `\n*Total Amount:* LKR ${total.toLocaleString()}\n`;
+      orderText += `*Method:* Cash on Delivery (COD) / Bank Transfer\n`;
+      orderText += `==========================================`;
+
+      const encodedMsg = encodeURIComponent(orderText);
+      const whatsappUrl = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodedMsg}`;
+      
+      cart = [];
+      saveCart();
+      updateCartUI();
+      toggleCart(false);
+      
+      window.open(whatsappUrl, '_blank');
+    }
+
+    // PayPal Cart Checkout
+    function checkoutPayPal() {
+      if (cart.length === 0) return;
+
+      const ppForm = document.getElementById("paypal-cart-form");
+      const ppBusiness = document.getElementById("pp-form-business");
+      const ppCurrency = document.getElementById("pp-form-currency");
+      
+      ppBusiness.value = STORE_CONFIG.paypalEmail;
+      
+      const oldInputs = ppForm.querySelectorAll(".dynamic-item-input");
+      oldInputs.forEach(el => el.remove());
+
+      let needsConversion = (STORE_CONFIG.currency === 'LKR');
+      ppForm.querySelector("#pp-form-currency").value = needsConversion ? "USD" : STORE_CONFIG.currency;
+      
+      cart.forEach((item, index) => {
+        const itemIndex = index + 1;
+        
+        const nameInput = document.createElement("input");
+        nameInput.type = "hidden";
+        nameInput.name = `item_name_${itemIndex}`;
+        nameInput.value = item.title;
+        nameInput.className = "dynamic-item-input";
+        
+        const amtInput = document.createElement("input");
+        amtInput.type = "hidden";
+        amtInput.name = `amount_${itemIndex}`;
+        const priceVal = needsConversion ? (item.price * STORE_CONFIG.paypalConversionRate).toFixed(2) : item.price;
+        amtInput.value = priceVal;
+        amtInput.className = "dynamic-item-input";
+        
+        const qtyInput = document.createElement("input");
+        qtyInput.type = "hidden";
+        qtyInput.name = `quantity_${itemIndex}`;
+        qtyInput.value = item.quantity;
+        qtyInput.className = "dynamic-item-input";
+
+        ppForm.appendChild(nameInput);
+        ppForm.appendChild(amtInput);
+        ppForm.appendChild(qtyInput);
+      });
+
+      showToast("Redirecting to secure PayPal Checkout...");
+      
+      setTimeout(() => {
+        ppForm.submit();
+        cart = [];
+        saveCart();
+        updateCartUI();
+        toggleCart(false);
+      }, 1000);
+    }
+
+    function openWhatsAppChat() {
+      const msg = encodeURIComponent("Hello CJR Electronics! I have a question regarding your products.");
+      window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${msg}`, '_blank');
+    }
+
+    function openYouTubeChannel() {
+      window.open(STORE_CONFIG.youtubeUrl, '_blank');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast-notif");
+      const msgEl = document.getElementById("toast-message");
+      msgEl.textContent = message;
+      toast.classList.add("show");
+      
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
